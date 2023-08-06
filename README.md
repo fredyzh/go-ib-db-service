@@ -3,5 +3,6 @@
 ## description
   - rebuild stock database feeding service by go, provide data service for IB agent, a java spring boot servce to fetch data.
   - provide data for data analysis and UI desplay
+  - use fiber as web framework, and beego orm as backend orm to handle simple CRUD
 
 
