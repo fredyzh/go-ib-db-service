@@ -19,7 +19,3 @@ type DailyHistoricalStock struct {
 	Volume  int64     `json:"volume"`
 	Wap     float64   `json:"wap"`
 }
-
-// type DailyCompatible interface {
-// 	uint | int | int64 | float64
-// }

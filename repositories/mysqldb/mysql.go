@@ -76,7 +76,7 @@ func (m *MysqlDBRepo) GetStocks() ([]*models.Stock, error) {
 		m.GetDBRepo()
 	}
 
-	var stocks []*models.Stock
+	var stocks []*models.Stock = []*models.Stock{}
 	_, err := m.DB.QueryTable(models.Stock{}).All(&stocks)
 
 	if err != nil {
@@ -170,13 +170,13 @@ func (m *MysqlDBRepo) SaveOrUpdateDailyStock(ds *models.DailyHistoricalStock) er
 	return nil
 }
 
-func (m *MysqlDBRepo) FindDailyByDuration(ids []*uint, start time.Time, end time.Time) ([]*models.DailyHistoricalStock, error) {
+func (m *MysqlDBRepo) FindDailyByDuration(ids []uint, start *time.Time, end *time.Time) ([]*models.DailyHistoricalStock, error) {
 	if m.DB == nil {
 		m.GetDBRepo()
 	}
 
 	var dailys []*models.DailyHistoricalStock
-	_, err := m.DB.QueryTable(models.DailyHistoricalStock{}).Filter("id__in", ids).Filter("date__gt", start).Filter("date__lt", end).All(&dailys)
+	_, err := m.DB.QueryTable(models.DailyHistoricalStock{}).Filter("stock_id__in", ids).Filter("date__gt", start).Filter("date__lt", end).All(&dailys)
 	if err != nil {
 		return nil, err
 	}

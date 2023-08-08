@@ -2,6 +2,7 @@ package api
 
 import (
 	"ibdatabase/controllers"
+	"ibdatabase/repositories"
 	"ibdatabase/repositories/mysqldb"
 	"ibdatabase/services"
 	"log"
@@ -38,7 +39,8 @@ func (app *Application) StartApp() {
 	mysqlDBRepo.Port = os.Getenv("MYSQL_PORT")
 
 	//assign db repo to service
-	app.Controller.Services = &services.Service{MysqlDB: mysqlDBRepo}
+	var dbrepo repositories.DatabaseRepo = mysqlDBRepo
+	app.Controller.Services = services.Service{GetDBRepo: dbrepo}
 
 	//register routers and start server
 	app.Controller.RegisterRouters()

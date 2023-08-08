@@ -27,7 +27,7 @@ func (c *Controllers) RegisterRouters() {
 	fiberApp.Post("/daily/saveHistoricalStocks", c.SaveHistoricalStocks)
 	fiberApp.Post("/daily/saveHistoricalStock", c.CreateOrEditStock)
 	// fiberApp.Get("/daily/getDailyStockBySymbol", c.CreateOrEditStock)
-	fiberApp.Get("/daily/getDailyStockByDurations", c.CreateOrEditStock)
+	fiberApp.Post("/daily/getDailyStockByDurations", c.GetDailyStocksByDurations)
 
 	log.Println("Starting application on port", c.Port)
 	fiberApp.Listen(fmt.Sprintf(":%s", c.Port))

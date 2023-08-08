@@ -13,7 +13,7 @@ import (
 var MySqlRepo mysqldb.MysqlDBRepo = mysqldb.MysqlDBRepo{
 	Host:      "localhost",
 	Port:      "3306",
-	Password:  "pw1234",
+	Password:  "Jz102702",
 	User:      "root",
 	DefaultDB: "stockv3",
 }
@@ -27,14 +27,14 @@ func TestDBConnection(t *testing.T) {
 	})
 }
 
-func TestDBCreateTables(t *testing.T) {
+// func TestDBCreateTables(t *testing.T) {
 
-	Convey("Test DB Access", t, func() {
-		m := MySqlRepo
-		err := m.Connection()
-		So(err, ShouldBeNil)
-	})
-}
+// 	Convey("Test DB Access", t, func() {
+// 		m := MySqlRepo
+// 		err := m.Connection()
+// 		So(err, ShouldBeNil)
+// 	})
+// }
 
 func TestAddStock(t *testing.T) {
 
@@ -98,7 +98,9 @@ func TestGetStocks(t *testing.T) {
 		err := m.Connection()
 		So(err, ShouldBeNil)
 
-		stocks, err := m.GetStocks()
+		var drp DatabaseRepo = &m
+
+		stocks, err := drp.GetStocks()
 		So(err, ShouldBeNil)
 		So(len(stocks), ShouldBeGreaterThan, 0)
 		log.Println(stocks[0].StockSymbol)
@@ -162,15 +164,17 @@ func TestFindDailyStocks(t *testing.T) {
 		err := m.Connection()
 		So(err, ShouldBeNil)
 
-		var t1 uint = 1
-		var t2 uint = 2
-		ids := []*uint{&t1, &t2}
-		start := time.Date(2023, 8, 2, 0, 0, 0, 0, time.UTC)
-		end := time.Date(2023, 8, 6, 0, 0, 0, 0, time.UTC)
-		stks, err := m.FindDailyByDuration(ids, start, end)
+		var t1 uint = 17
+		var t2 uint = 52
+		ids := []uint{t1, t2}
+		start := time.Date(2023, 6, 2, 0, 0, 0, 0, time.UTC)
+		end := time.Date(2023, 6, 20, 0, 0, 0, 0, time.UTC)
+		stks, err := m.FindDailyByDuration(ids, &start, &end)
+
+		log.Println(start)
 		So(err, ShouldBeNil)
-		log.Println(*stks[0])
-		log.Println(*stks[1])
+		log.Println(*&stks[0].Date)
+		//log.Println(*stks[1])
 		So(len(stks), ShouldBeGreaterThan, 0)
 	})
 

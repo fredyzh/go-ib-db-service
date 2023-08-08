@@ -15,11 +15,11 @@ type DatabaseRepo interface {
 	//save or update
 	InsertStocks(stks []*models.Stock) error
 	//delete a stock
-	DeleteStockById(id *uint) error
+	DeleteStockById(id uint) error
 
 	//insert dail stock data
 	InsertDailyStocks(ds []*models.DailyHistoricalStock) error
 	//find certain stocks by duration
-	FindDailyByDuration(ids []*uint, start time.Time, end time.Time) ([]*models.DailyHistoricalStock, error)
+	FindDailyByDuration(ids []uint, start *time.Time, end *time.Time) ([]*models.DailyHistoricalStock, error)
 	SaveOrUpdateDailyStock(ds *models.DailyHistoricalStock) error
 }
