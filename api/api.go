@@ -2,6 +2,7 @@ package api
 
 import (
 	"ibdatabase/controllers"
+	"ibdatabase/grpcserver"
 	"ibdatabase/repositories"
 	"ibdatabase/repositories/mysqldb"
 	"ibdatabase/services"
@@ -13,6 +14,7 @@ import (
 // start and running api services
 type Application struct {
 	Controller *controllers.Controllers
+	GrpcServer *grpcserver.GrpcServer
 }
 
 func (app *Application) StartApp() {
@@ -41,6 +43,23 @@ func (app *Application) StartApp() {
 	//assign db repo to service
 	var dbrepo repositories.DatabaseRepo = mysqlDBRepo
 	app.Controller.Services = services.Service{GetDBRepo: dbrepo}
+
+	//grpc init
+	app.GrpcServer = &grpcserver.GrpcServer{}
+	app.GrpcServer.Port = os.Getenv("GRPC_PORT")
+	enableTls, err := strconv.ParseBool(os.Getenv("GRPC_TLS"))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	app.GrpcServer.EnableTLS = enableTls
+	app.GrpcServer.CertFile = os.Getenv("GRPC_CERT_FILE")
+	app.GrpcServer.CertKey = os.Getenv("GRPC_CERT_KEY")
+	app.GrpcServer.Services = &services.Service{GetDBRepo: dbrepo}
+
+	//start grpc
+	go app.GrpcServer.StartGRPC()
 
 	//register routers and start server
 	app.Controller.RegisterRouters()

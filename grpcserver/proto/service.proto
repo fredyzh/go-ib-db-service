@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package grpcserver;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/Timestamp.proto";
+import "google/protobuf/Empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "/";
+
+message  GrpcResponse{
+    bool error=1;
+    string message=2;
+    google.protobuf.Any data=3;
+}
+
+message GrpcStockDurationRequest{
+    repeated string symbols=1;
+    google.protobuf.Timestamp start =2;
+    google.protobuf.Timestamp end=3;
+}
+
+message GrpcStock{
+    uint64 id=1;
+    string stock_symbol=2;
+}
+
+message GrpcDailyHistoricalStock{
+    uint64 id=1;
+    double close=2;
+    double open=3;
+    double high=4;
+    double low=5;
+    google.protobuf.Timestamp date=6;
+    uint64 stock_id=7;
+    uint64 count=8;
+    uint64 volume=9;
+    double wap=10;
+}
+
+service StockService{
+    rpc GetStocks(google.protobuf.Empty) returns (stream GrpcStock);
+	rpc SaveOrUpdateStock(GrpcStock) returns (GrpcResponse);
+	rpc CreateStocks(stream GrpcStock) returns (GrpcResponse);
+	rpc RemoveStock(google.protobuf.Int64Value) returns (GrpcResponse);
+	rpc CreateDailyStocks(stream GrpcDailyHistoricalStock) returns (GrpcResponse);
+	rpc RetrieveDailyByDuration(GrpcStockDurationRequest) returns (stream GrpcDailyHistoricalStock);
+	rpc SaveOrUdpdateDailyStock(GrpcDailyHistoricalStock) returns (GrpcResponse);
+}

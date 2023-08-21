@@ -149,6 +149,7 @@ func (m *MysqlDBRepo) InsertDailyStocks(ds []*models.DailyHistoricalStock) error
 		if !strings.Contains(err.Error(), "Duplicate") {
 			return err
 		}
+		log.Println(err.Error())
 	}
 
 	return nil
@@ -176,7 +177,7 @@ func (m *MysqlDBRepo) FindDailyByDuration(ids []uint, start *time.Time, end *tim
 	}
 
 	var dailys []*models.DailyHistoricalStock
-	_, err := m.DB.QueryTable(models.DailyHistoricalStock{}).Filter("stock_id__in", ids).Filter("date__gt", start).Filter("date__lt", end).All(&dailys)
+	_, err := m.DB.QueryTable(models.DailyHistoricalStock{}).Filter("stock_id__in", ids).Filter("date__gte", start).Filter("date__lte", end).All(&dailys)
 	if err != nil {
 		return nil, err
 	}
